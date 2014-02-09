@@ -24,7 +24,7 @@ goog.require('goog.string');
  * @param {string} str The string to escape.
  * @return {string} The escaped string.
  */
-image.escape.attrescaper = function(str) {
+seehuhn.gotmpl.attrescaper = function(str) {
   return goog.string.htmlEscape(str);
 };
 
@@ -34,7 +34,7 @@ image.escape.attrescaper = function(str) {
  * @param {string} str The string to escape.
  * @return {string} The escaped string.
  */
-image.escape.htmlescaper = function(str) {
+seehuhn.gotmpl.htmlescaper = function(str) {
   return goog.string.htmlEscape(str);
 };
 
@@ -44,6 +44,6 @@ image.escape.htmlescaper = function(str) {
  * @param {string} str The string to escape.
  * @return {string} The escaped string.
  */
-image.escape.urlnormalizer = function(str) {
+seehuhn.gotmpl.urlnormalizer = function(str) {
   return str;               // TODO(voss): what needs to be done here?
 };

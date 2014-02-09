@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Test Page</title>
+<script src="/closure-library/closure/goog/base.js"></script>
+<script>
+goog.addDependency('../../../gotmpljs/gotmpl.js', ['seehuhn.gotmpl'], ['goog.string']);
+goog.addDependency('../../../template.js', ['template'], ['seehuhn.gotmpl']);
+</script>
+<style type="text/css">
+DIV.result {
+  background: #DDD;
+}
+</style>
+</head>
+<body>
+<h1>Test Page</h1>
+
+<h2>Server Side Rendering</h2>
+
+<div class="result">{{ template "test.html" . }}</div>
+
+<h2>Client Side Rendering</h2>
+
+<div class="result" id="render">
+// filled in by JavaScript
+</div>
+
+<script>
+goog.require('goog.net.XhrIo');
+goog.require('template');
+</script>
+<script>
+goog.net.XhrIo.send("/data.json", function(e) {
+  var xhr = e.target;
+  var data = xhr.getResponseJson();
+  var div = document.getElementById('render');
+  div.innerHTML = template.test(data);
+});
+</script>
+
+</body>
+</html>

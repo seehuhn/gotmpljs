@@ -5,27 +5,54 @@
 <title>Test Page</title>
 <script src="/closure-library/closure/goog/base.js"></script>
 <script>
-goog.addDependency('../../../gotmpljs/gotmpl.js', ['seehuhn.gotmpl'], ['goog.string']);
+goog.addDependency('../../../gotmpl.js', ['seehuhn.gotmpl'], ['goog.string']);
 goog.addDependency('../../../template.js', ['template'], ['seehuhn.gotmpl']);
 </script>
 <style type="text/css">
-DIV.result {
-  background: #DDD;
+DIV.left, DIV.right {
+  margin: 0;
+  padding: 0; .5em;
+  width: 50%;
+}
+.left {
+  float: left;
+}
+.left .result {
+  background: #CFC;
+}
+.right {
+  float: right;
+}
+.right .result {
+  background: #FCC;
+}
+HR {
+  clear: both;
 }
 </style>
 </head>
 <body>
 <h1>Test Page</h1>
 
+<hr>
+
+<div class="left">
 <h2>Server Side Rendering</h2>
 
-<div class="result">{{ template "test.html" . }}</div>
+<div class="result" id="server">{{ template "test.html" . }}</div>
+</div>
 
+<div class="right">
 <h2>Client Side Rendering</h2>
 
-<div class="result" id="render">
+<div class="result" id="client">
 // filled in by JavaScript
 </div>
+</div>
+
+<hr>
+
+<p>result: <b id="result"></b>
 
 <script>
 goog.require('goog.net.XhrIo');
@@ -35,8 +62,11 @@ goog.require('template');
 goog.net.XhrIo.send("/data.json", function(e) {
   var xhr = e.target;
   var data = xhr.getResponseJson();
-  var div = document.getElementById('render');
+  var div = document.getElementById('client');
   div.innerHTML = template.test(data);
+  var server = document.getElementById('server');
+  var result = document.getElementById('result');
+  result.innerHTML = (server.innerHTML == div.innerHTML) ? 'equal' : 'different';
 });
 </script>
 

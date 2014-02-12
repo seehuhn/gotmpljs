@@ -17,10 +17,13 @@ var closureBaseJs = flag.String("c", "./closure-library"+closureSuffix,
 
 type DataType struct {
 	A int
-	B string
+	B []string
 }
 
-var Data = DataType{1, "<b>two</b>"}
+var Data = DataType{
+	A: 1,
+	B: []string{"one", "<b>two</b>", "three"},
+}
 
 func main() {
 	flag.Parse()
@@ -36,15 +39,14 @@ func main() {
 	closureRootURL := "/closure-library/"
 	http.Handle(closureRootURL, http.StripPrefix(closureRootURL,
 		http.FileServer(http.Dir(closureRootPath))))
-
-	gotmpljsRootPath := "../js"
-	gotmpljsRootURL := "/gotmpljs/"
-	http.Handle(gotmpljsRootURL, http.StripPrefix(gotmpljsRootURL,
-		http.FileServer(http.Dir(gotmpljsRootPath))))
-
-	http.HandleFunc("/template.js", func(w http.ResponseWriter, r *http.Request) {
-		http.ServeFile(w, r, "template.js")
-	})
+	http.HandleFunc("/gotmpl.js",
+		func(w http.ResponseWriter, r *http.Request) {
+			http.ServeFile(w, r, "../gotmpl.js")
+		})
+	http.HandleFunc("/template.js",
+		func(w http.ResponseWriter, r *http.Request) {
+			http.ServeFile(w, r, "template.js")
+		})
 
 	http.HandleFunc("/data.json", func(w http.ResponseWriter, r *http.Request) {
 		b, _ := json.Marshal(Data)

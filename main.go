@@ -209,6 +209,26 @@ func (p *Parsival) walkRange(dot string, r *parse.RangeNode) {
 	p.loopIndex -= 1
 }
 
+func (p *Parsival) walkIfOrWith(typ parse.NodeType, dot string,
+	pipe *parse.PipeNode, list, elseList *parse.ListNode) {
+	val := p.evalPipeline(dot, pipe)
+	p.write("if (%s) {\n", val)
+	p.indent()
+	if typ == parse.NodeWith {
+		p.walk(val, list)
+	} else {
+		p.walk(dot, list)
+	}
+	if elseList != nil {
+		p.outdent()
+		p.write("} else {\n")
+		p.indent()
+		p.walk(dot, elseList)
+	}
+	p.outdent()
+	p.write("}\n")
+}
+
 func (p *Parsival) walk(dot string, node parse.Node) {
 	switch node := node.(type) {
 	case *parse.ActionNode:
@@ -217,7 +237,8 @@ func (p *Parsival) walk(dot string, node parse.Node) {
 			p.write("res.push(%s);\n", res)
 		}
 	case *parse.IfNode:
-		p.write("IfNode: %#v\n", node)
+		p.walkIfOrWith(parse.NodeIf, dot, node.Pipe, node.List,
+			node.ElseList)
 	case *parse.ListNode:
 		for _, node := range node.Nodes {
 			p.walk(dot, node)
@@ -229,7 +250,8 @@ func (p *Parsival) walk(dot string, node parse.Node) {
 	case *parse.TextNode:
 		p.write("res.push(%s);\n", lib.JsQuote(string(node.Text)))
 	case *parse.WithNode:
-		p.write("WithNode: %#v\n", node)
+		p.walkIfOrWith(parse.NodeWith, dot, node.Pipe, node.List,
+			node.ElseList)
 	default:
 		p.write("error, unknown node: %#v\n", node)
 	}

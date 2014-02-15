@@ -6,7 +6,7 @@
 <script src="/closure-library/closure/goog/base.js"></script>
 <script>
 goog.addDependency('../../../gotmpl.js', ['seehuhn.gotmpl'], ['goog.string']);
-goog.addDependency('../../../template.js', ['template'], ['seehuhn.gotmpl']);
+goog.addDependency('../../../example.js', ['test'], ['seehuhn.gotmpl']);
 </script>
 <style type="text/css">
 DIV.left, DIV.right {
@@ -39,7 +39,7 @@ HR {
 <div class="left">
 <h2>Server Side Rendering</h2>
 
-<div class="result" id="server">{{ template "test.html" . }}</div>
+<div class="result" id="server">{{ template "example.html" . }}</div>
 </div>
 
 <div class="right">
@@ -56,14 +56,14 @@ HR {
 
 <script>
 goog.require('goog.net.XhrIo');
-goog.require('template');
+goog.require('test');
 </script>
 <script>
 goog.net.XhrIo.send("/data.json", function(e) {
   var xhr = e.target;
   var data = xhr.getResponseJson();
   var div = document.getElementById('client');
-  div.innerHTML = template.test(data);
+  div.innerHTML = test.example(data);
   var server = document.getElementById('server');
   var result = document.getElementById('result');
   result.innerHTML = (server.innerHTML == div.innerHTML) ? 'equal' : 'different';

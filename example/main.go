@@ -1,3 +1,19 @@
+// Example code for the GoTmplJs compiler.
+// Copyright (C) 2014  Jochen Voss <voss@seehuhn.de>
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 package main
 
 import (
@@ -33,7 +49,7 @@ func main() {
 	}
 	fd.Close()
 
-	t := template.Must(template.ParseFiles("index.html", "test.html"))
+	t := template.Must(template.ParseFiles("index.html", "example.html"))
 
 	closureRootPath := strings.TrimSuffix(*closureBaseJs, closureSuffix)
 	closureRootURL := "/closure-library/"
@@ -43,9 +59,9 @@ func main() {
 		func(w http.ResponseWriter, r *http.Request) {
 			http.ServeFile(w, r, "../gotmpl.js")
 		})
-	http.HandleFunc("/template.js",
+	http.HandleFunc("/example.js",
 		func(w http.ResponseWriter, r *http.Request) {
-			http.ServeFile(w, r, "template.js")
+			http.ServeFile(w, r, "example.js")
 		})
 
 	http.HandleFunc("/data.json", func(w http.ResponseWriter, r *http.Request) {

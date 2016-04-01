@@ -116,7 +116,7 @@ func (p *Parsival) evalArg(dot string, n parse.Node) string {
 func (p *Parsival) evalCall(dot string, name string, args []parse.Node,
 	final string) string {
 	args = args[1:]
-	argv := []string{}
+	var argv []string
 	for i := 0; i < len(args); i++ {
 		arg := p.evalArg(dot, args[i])
 		argv = append(argv, arg)
@@ -188,7 +188,7 @@ func (p *Parsival) evalPipeline(dot string, pipe *parse.PipeNode) string {
 
 func (p *Parsival) walkRange(dot string, r *parse.RangeNode) {
 	val := p.evalPipeline(dot, r.Pipe)
-	p.loopIndex += 1
+	p.loopIndex++
 	loopVar := "i"
 	if p.loopIndex > 1 {
 		loopVar += strconv.Itoa(p.loopIndex)
@@ -206,7 +206,7 @@ func (p *Parsival) walkRange(dot string, r *parse.RangeNode) {
 	p.walk(elem, r.List)
 	p.outdent()
 	p.write("}\n")
-	p.loopIndex -= 1
+	p.loopIndex--
 }
 
 func (p *Parsival) walkIfOrWith(typ parse.NodeType, dot string,
@@ -281,7 +281,7 @@ func (p *Parsival) processTemplate(t *template.Template) {
 		" The data to apply the template to.\n")
 	args := dot
 	if len(p.functions) > 0 {
-		names := []string{}
+		var names []string
 		for name := range p.functions {
 			names = append(names, name)
 		}
